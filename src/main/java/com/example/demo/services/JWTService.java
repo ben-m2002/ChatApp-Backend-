@@ -34,7 +34,7 @@ public class JWTService {
     this.tokenRepo = tokenRepo;
   }
 
-  public String generateToken(String username) {
+  public String generateToken(String email) {
     Map<String, Object> claims =
         new HashMap<>(); // so each entry in the map is a claim that describes the owner of the
                          // token
@@ -43,13 +43,13 @@ public class JWTService {
         Jwts.builder()
             .claims()
             .add(claims)
-            .subject(username)
+            .subject(email)
             .issuedAt(new Date(System.currentTimeMillis()))
             .expiration(expirationTime)
             .and()
             .signWith(this.getSigningKey())
             .compact();
-    tokenRepo.save(AuthTokenModel.builder().token(token).username(username).expirationTime(expirationTime).build());
+    tokenRepo.save(AuthTokenModel.builder().token(token).email(email).expirationTime(expirationTime).build());
     return token;
   }
 
@@ -58,7 +58,7 @@ public class JWTService {
     return Keys.hmacShaKeyFor(secretKeyBytes);
   }
 
-  public String extractUsername(String token) {
+  public String extractEmail(String token) {
     Claims claims = extractAllClaims(token);
     return claims.getSubject();
   }
@@ -73,7 +73,7 @@ public class JWTService {
     if (tokenRepo.findByToken(token) == null) {
       return false;
     }
-    if (!userDetails.getUsername().equals(extractUsername(token))) {
+    if (!userDetails.getUsername().equals(extractEmail(token))) {
       return false;
     }
     if (extractExpiration(token).before(new Date())) {
@@ -92,9 +92,9 @@ public class JWTService {
   }
 
   @Transactional
-  public String updateTokenExpiration(String username, String token) {
+  public String updateTokenExpiration(String email, String token) {
     this.revokeToken(token);
-    String newToken = this.generateToken(username);
+    String newToken = this.generateToken(email);
     return newToken;
   }
 

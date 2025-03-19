@@ -6,11 +6,12 @@ import lombok.*;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class RegisterRequestDto extends AuthRequestDto {
-    private String email;
-    public RegisterRequestDto(@JsonProperty("username") String username,
-                              @JsonProperty("password")  String password,
-                              @JsonProperty("email")  String email) {
-        super(username, password);
-        this.email = email;
+    private String firstName;
+    private String lastName;
+    public RegisterRequestDto(
+            @JsonProperty("email")  String email,
+            @JsonProperty("password")  String password)
+    {
+        super(email, password);
     }
 }

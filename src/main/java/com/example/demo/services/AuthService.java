@@ -50,11 +50,11 @@ public class AuthService extends APIService {
       UserModel savedUser = repo.save(userModel);
       AuthResponseDto responseDto = authMapper.userModelToAuthResponseDto(savedUser);
       responseDto.setMessage("User registered successfully");
-      responseDto.setToken(this.jwtService.generateToken(userModel.getUsername()));
+      responseDto.setToken(this.jwtService.generateToken(userModel.getEmail()));
       return ResponseEntity.ok(responseDto);
     } catch (Exception e) {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-          .body(new AuthResponseDto("", "", e.getMessage(), ""));
+          .body(new AuthResponseDto("", "", e.getMessage()));
     }
   }
 
@@ -64,14 +64,13 @@ public class AuthService extends APIService {
     if (authPair.getFirst()) {
       AuthResponseDto dto =
           new AuthResponseDto(
-              userModel.getUsername(),
               authPair.getSecond().getEmail(),
               "User Successfully Logged In",
-              this.jwtService.generateToken(userModel.getUsername()));
+              this.jwtService.generateToken(userModel.getEmail()));
       return ResponseEntity.ok(dto);
     } else {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-          .body(new AuthResponseDto("", "", "Invalid Credentials", ""));
+          .body(new AuthResponseDto("", "", "Invalid Credentials"));
     }
   }
 
@@ -90,7 +89,7 @@ public class AuthService extends APIService {
     Authentication auth =
         this.authManager.authenticate(
             new UsernamePasswordAuthenticationToken(
-                userModel.getUsername(), userModel.getPassword()));
+                userModel.getEmail(), userModel.getPassword()));
     return new Pair<>(true, (UserPrincipal) auth.getPrincipal());
   }
 }

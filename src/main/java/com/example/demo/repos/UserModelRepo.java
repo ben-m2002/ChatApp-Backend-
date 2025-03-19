@@ -4,5 +4,5 @@ import com.example.demo.models.UserModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserModelRepo extends JpaRepository<UserModel, Integer> {
-    UserModel findByUsername(String username);
+    UserModel findByEmail(String email);
 }

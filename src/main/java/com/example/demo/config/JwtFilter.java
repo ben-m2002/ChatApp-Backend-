@@ -35,20 +35,25 @@ public class JwtFilter extends OncePerRequestFilter {
     // Bearer spdsapdspodapoasds  example
     String authHeader = request.getHeader("Authorization");
     String token = null;
-    String username = null;
+    String email = null;
     try {
       if (authHeader != null && authHeader.startsWith("Bearer")) {
         token = authHeader.substring(7);
-        username = jwtService.extractUsername(token);
+        email = jwtService.extractEmail(token);
       }
-      if (username != null
+      if (email != null
           && SecurityContextHolder.getContext().getAuthentication()
-              == null) { // so if there is a username on the token and the request is not
+              == null) { // so if there is an email on the token and the request is not
                          // authenticated
         UserDetails userDetails =
             applicationContext
                 .getBean(MyUserDetailsService.class)
-                .loadUserByUsername(username); // here we will grab a user details object
+                .loadUserByUsername(email); // here we will grab a user details object
+
+        System.out.println("Token: " + token);
+        System.out.println("Email: " + email);
+        System.out.println("UserDetails: " + userDetails.getPassword());
+
         if (jwtService.validateToken(
             token,
             userDetails)) { // basically check if the token is valid, and the user the token refers

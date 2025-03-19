@@ -11,20 +11,22 @@ import org.springframework.stereotype.Service;
 public class AuthMapper {
 
     public UserModel registerRequestDtoToUserModel(RegisterRequestDto registerRequestDto) {
-        return UserModel.builder().username(registerRequestDto.getUsername())
+        return UserModel.builder()
+                .email(registerRequestDto.getEmail())
                .password(registerRequestDto.getPassword())
-               .email(registerRequestDto.getEmail())
+                .firstName(registerRequestDto.getFirstName())
+                .lastName(registerRequestDto.getLastName())
                .build();
     }
 
     public UserModel authRequestDtoToUserModel(AuthRequestDto authRequestDto) {
-        return UserModel.builder().username(authRequestDto.getUsername())
+        return UserModel.builder().email(authRequestDto.getEmail())
                 .password(authRequestDto.getPassword())
                 .build();
     }
 
     public AuthResponseDto userModelToAuthResponseDto(UserModel userModel) {
-        return new AuthResponseDto(userModel.getUsername(), userModel.getEmail(), "User Successfully Retrieved", "");
+        return new AuthResponseDto(userModel.getEmail(), "User Successfully Retrieved", "");
     }
 
 }

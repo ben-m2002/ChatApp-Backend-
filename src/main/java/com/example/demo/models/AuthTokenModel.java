@@ -15,12 +15,11 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AuthTokenModel {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     @Column(unique = true)
     private String token;
-    private String username;
+    private String email;
     private Date expirationTime;
 }
